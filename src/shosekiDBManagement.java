@@ -2,7 +2,8 @@
 import java.util.Scanner;
 public class shosekiDBManagement {
 	private static final Scanner  scanner = new Scanner(System.in);
-	 static DBAccess dao = new DBAccess();
+	static DBAccess dao = new DBAccess();
+	
 	public static void main(String[] args) {
 			shosekiDBSystem data;
 			int ret;
@@ -39,24 +40,26 @@ public class shosekiDBManagement {
 	                    System.out.print("date      > ");
 	                    int date  = scanner.nextInt();
 	                    data = new shosekiDBSystem(ISBN,bookName,writer,publisher,year,month,date);
-	        			ret = dao.registration(data);
-	        			System.out.println("挿入レコード件数" + ret);
+		        			ret = dao.registration(data);
+		        			System.out.println("挿入レコード件数" + ret);
 	                    break;
 	                case 2:
-	                	ArrayList<shosekiDBSystem> list = dao.findAll();
-	            		for(shosekiDBSystem d : list) {
-	            				System.out.println("ISBN :\t" + d.getISBN());
-	            				System.out.println("BOOKNAME :\t" + d.getBookname());
-	            				System.out.println("WRITER :\t" + d.getWriter());
-	            				System.out.println("PUBLISHER :\t" + d.getPublisher());
-	            				System.out.println("YEAR :\t" + d.getYear());
-	            				System.out.println("MONTH :\t" + d.getMonth());
-	            				System.out.println("DAY :\t" + d.getDay());
-	            		}
+		                	ArrayList<shosekiDBSystem> list = dao.findAll();
+		            		for(shosekiDBSystem d : list) {
+		            				System.out.println("ISBN :\t" + d.getISBN());
+		            				System.out.println("BOOKNAME :\t" + d.getBookname());
+		            				System.out.println("WRITER :\t" + d.getWriter());
+		            				System.out.println("PUBLISHER :\t" + d.getPublisher());
+		            				System.out.println("YEAR :\t" + d.getYear());
+		            				System.out.println("MONTH :\t" + d.getMonth());
+		            				System.out.println("DAY :\t" + d.getDay());
+		            		}
 	                    break;
 	                case 9:
 	                    System.exit(0);
 	                    break;
+	                default: 
+	                		break;
 	            }
 	        }
 		}
