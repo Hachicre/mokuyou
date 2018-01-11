@@ -36,27 +36,27 @@ public class Server {
 				str = "";
 				while(!str.equals(END_MARK)) {
 					str = bufferedReader.readLine();
-					System.out.println(str);
-					switch (str) {
-					case "get shosek":
-						ArrayList<shosekiDBSystem> list = dao.findAll();
-
-		            		for(shosekiDBSystem d : list) {
-		            				printWriter.println("ISBN :\t" + d.getISBN());
-		            				printWriter.println("BOOKNAME :\t" + d.getBookname());
-		            				printWriter.println("WRITER :\t" + d.getWriter());
-		            				printWriter.println("PUBLISHER :\t" + d.getPublisher());
-		            				printWriter.println("YEAR :\t" + d.getYear());
-		            				printWriter.println("MONTH :\t" + d.getMonth());
-		            				printWriter.println("DAY :\t" + d.getDay());
-		            		}
-						printWriter.flush();
-						break;
-
-					default:
-						break;
-					}
+					printWriter.println(str);
 					
+					String resultMessage = "";
+					
+					ArrayList<shosekiDBSystem> list = dao.findAll();
+
+            		printWriter.println("===========================");
+	            	for(shosekiDBSystem d : list) {
+            		    resultMessage += "ISBN :\t" + d.getISBN();
+            		    resultMessage += "BOOKNAME :\t" + d.getBookname();
+        			    resultMessage += "WRITER :\t" + d.getWriter();
+        			    resultMessage += "PUBLISHER :\t" + d.getPublisher();
+        			    resultMessage += "YEAR :\t" + d.getYear();
+        			    resultMessage += "MONTH :\t" + d.getMonth();
+        			    resultMessage += "DAY :\t" + d.getDay();
+	            	}
+            		printWriter.println(resultMessage);
+					printWriter.flush();
+
+            		printWriter.println("===========================");
+				
 					printWriter.println("メッセージを受信しました");
 					printWriter.flush();
 				}
