@@ -6,11 +6,13 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Server {
 	
 	private static final int LISTEN_PORT = 9999;
 	private static final String END_MARK = ".";
+	static DBAccess dao = new DBAccess();
 	
 	public static void main(String args[]) {
 		
@@ -19,6 +21,8 @@ public class Server {
 		BufferedReader bufferedReader;
 		PrintWriter printWriter;
 		String str;
+		
+		
 		
 		try {
 			serverSocket = new ServerSocket(LISTEN_PORT);
@@ -33,6 +37,25 @@ public class Server {
 				while(!str.equals(END_MARK)) {
 					str = bufferedReader.readLine();
 					System.out.println(str);
+					switch (str) {
+					case "get shosek":
+						ArrayList<shosekiDBSystem> list = dao.findAll();
+
+		            		for(shosekiDBSystem d : list) {
+		            				printWriter.println("ISBN :\t" + d.getISBN());
+		            				printWriter.println("BOOKNAME :\t" + d.getBookname());
+		            				printWriter.println("WRITER :\t" + d.getWriter());
+		            				printWriter.println("PUBLISHER :\t" + d.getPublisher());
+		            				printWriter.println("YEAR :\t" + d.getYear());
+		            				printWriter.println("MONTH :\t" + d.getMonth());
+		            				printWriter.println("DAY :\t" + d.getDay());
+		            		}
+						printWriter.flush();
+						break;
+
+					default:
+						break;
+					}
 					
 					printWriter.println("メッセージを受信しました");
 					printWriter.flush();
