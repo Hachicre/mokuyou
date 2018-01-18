@@ -1,5 +1,5 @@
 ﻿
-public class shosekiDBSystem {
+public class shosekiDBSystem implements java.io.Serializable {
 
 		private int isbn;
 		private String bookname;

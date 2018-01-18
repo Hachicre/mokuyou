@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -30,33 +32,25 @@ public class Server {
 			while(true) {
 				System.out.println("新しい接続を待っています。");
 				socket = serverSocket.accept();
+				ArrayList<shosekiDBSystem> list;
 				bufferedReader = new BufferedReader( new InputStreamReader(socket.getInputStream()));
 				printWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
+				ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+				ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
 				
 				str = "";
 				while(!str.equals(END_MARK)) {
+					list = dao.findAll();
 					str = bufferedReader.readLine();
 					printWriter.println(str);
 					
 					String resultMessage = "";
 					
-					ArrayList<shosekiDBSystem> list = dao.findAll();
+	            	
+	            	outputStream.writeObject(list);
+            		//printWriter.println(resultMessage);
+					//printWriter.flush();
 
-            		printWriter.println("===========================");
-	            	for(shosekiDBSystem d : list) {
-            		    resultMessage += "ISBN :\t" + d.getISBN();
-            		    resultMessage += "BOOKNAME :\t" + d.getBookname();
-        			    resultMessage += "WRITER :\t" + d.getWriter();
-        			    resultMessage += "PUBLISHER :\t" + d.getPublisher();
-        			    resultMessage += "YEAR :\t" + d.getYear();
-        			    resultMessage += "MONTH :\t" + d.getMonth();
-        			    resultMessage += "DAY :\t" + d.getDay();
-	            	}
-            		printWriter.println(resultMessage);
-					printWriter.flush();
-
-            		printWriter.println("===========================");
-				
 					printWriter.println("メッセージを受信しました");
 					printWriter.flush();
 				}
