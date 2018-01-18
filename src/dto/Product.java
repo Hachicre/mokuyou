@@ -9,7 +9,7 @@ public class Product implements java.io.Serializable {
 	private String createdAt;
 	private String updatedAt;
 	
-	public void product(
+	public Product(
 		int    id,
 		String name,
 		int    stock,

@@ -1,6 +1,6 @@
 package dto;
 
-public class Rental {
+public class Rental implements java.io.Serializable {
 
 	private int id;
 	private int setlementId;

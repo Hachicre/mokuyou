@@ -1,6 +1,6 @@
 package dto;
 
-public class User {
+public class User implements java.io.Serializable {
 
 	private int    id;
 	private String name;

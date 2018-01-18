@@ -1,12 +1,12 @@
 package dto;
 
-public class Plan {
+public class Plan implements java.io.Serializable {
 	
 	private int    id;
 	private double coefficient;
 	private int    period;
 	
-	public void product(
+	public Plan(
 		int    id,
 		double coefficient,
 		int    period
