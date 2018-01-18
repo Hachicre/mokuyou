@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class DBAccess {
 	private Connection createConnection() {
-	// 変数宣言
+		
 		Connection con = null;
 		try {
 				// DBドライバクラスのロード
@@ -19,13 +19,14 @@ public class DBAccess {
 				con = DriverManager.getConnection("jdbc:mysql://localhost:65534/tatsuya", "user1", "pass1");
 																														// ↑httpでのwebアクセス方法に似てる？
 
-		}catch(ClassNotFoundException e) {
+		} catch(ClassNotFoundException e) {
 				System.out.println("JDBCドライバが見つかりません。");
 				e.printStackTrace();
-		}catch(SQLException e) {
+		} catch(SQLException e) {
 				System.out.println("DBアクセス時にエラーが発生しました。");
 				e.printStackTrace();
 		}
+		
 		return con;
 	}
 	
