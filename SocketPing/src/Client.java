@@ -19,13 +19,20 @@ public class Client {
 		String sendString,receiveString;
 		
 		try {
-			socket = new Socket("localhost",9999);
-			bufferdReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			printWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
-			bufferedReaderStdIn = new BufferedReader(new InputStreamReader(System.in));
-			ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-			ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-			ArrayList<shosekiDBSystem> list;
+			socket 								= new Socket("localhost",9999);
+			bufferdReader 						= new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			printWriter 						= new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
+			bufferedReaderStdIn 				= new BufferedReader(new InputStreamReader(System.in));
+			ObjectOutputStream outputStream 	= new ObjectOutputStream(socket.getOutputStream());
+			ObjectInputStream  inputStream 	= new ObjectInputStream(socket.getInputStream());
+			
+			ArrayList<dto.Plan> 			plan;	
+			ArrayList<dto.Product> 		product;
+			ArrayList<dto.Rental> 			rental;
+			ArrayList<dto.Settlement>		settlement;
+			ArrayList<dto.User> 			user;
+			
+			
 			sendString = "";
 			while(! sendString.equals(END_MARK)) {
 				System.out.println("送信メッセージを入力してください:");
@@ -33,14 +40,13 @@ public class Client {
 	
 				printWriter.println(sendString);
 				printWriter.flush();
-				list = (ArrayList<shosekiDBSystem>) inputStream.readObject();
+				product = (ArrayList<dto.Product>) inputStream.readObject();
 				
-				for(shosekiDBSystem db: list) {
-					System.out.println("ISBN :\t"+ db. getISBN()+"\n"
-										+"TITLE :\t"+ db.getBookname()+"\n"
-										+"TITLE :\t"+ db.getBookname()+"\n"
-										+"WRITER :\t"+ db.getWriter()+"\n"
-										+"PUBLISHER :\t"+ db.getPublisher()+"\n");
+				for(dto.Product db: product) {
+					System.out.println("ID :\t"+ db. getId()+"\n"
+										+"Name :\t"+ db.getName()+"\n"
+										+"Stock :\t"+ db.getStock()+"\n"
+										+"Price :\t"+ db.getPrice()+"\n");
 
 				}
 				receiveString = bufferdReader.readLine();

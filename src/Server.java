@@ -14,7 +14,7 @@ public class Server {
 	
 	private static final int LISTEN_PORT = 9999;
 	private static final String END_MARK = ".";
-	static DBAccess dao = new DBAccess();
+	static dao.Product dao = new dao.Product();
 	
 	public static void main(String args[]) {
 		
@@ -31,12 +31,13 @@ public class Server {
 			
 			while(true) {
 				System.out.println("新しい接続を待っています。");
-				socket = serverSocket.accept();
-				ArrayList<shosekiDBSystem> list;
-				bufferedReader = new BufferedReader( new InputStreamReader(socket.getInputStream()));
-				printWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
-				ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-				ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+				socket 								= serverSocket.accept();
+				bufferedReader 						= new BufferedReader( new InputStreamReader(socket.getInputStream()));
+				printWriter						  	= new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
+				ObjectInputStream  inputStream	= new ObjectInputStream(socket.getInputStream());
+				ObjectOutputStream outputStream 	= new ObjectOutputStream(socket.getOutputStream());
+				
+				ArrayList<dto.Product> list;
 				
 				str = "";
 				while(!str.equals(END_MARK)) {
