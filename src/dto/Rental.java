@@ -3,22 +3,22 @@ package dto;
 public class Rental implements java.io.Serializable {
 
 	private int id;
-	private int setlementId;
-	private int prroductId;
+	private int settlementId;
+	private int productId;
 	private int planId;
 
 	public Rental(
 		int id,
-		int setlementId,
-		int prroductId,
+		int settlementId,
+		int productId,
 		int planId
 	) {
 		this.id          = id;
-		this.setlementId = setlementId;
-		this.prroductId  = prroductId;
+		this.settlementId = settlementId;
+		this.productId  = productId;
 		this.planId      = planId;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -27,20 +27,20 @@ public class Rental implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public int getSetlementId() {
-		return setlementId;
+	public int getSettlementId() {
+		return settlementId;
 	}
 
-	public void setSetlementId(int setlementId) {
-		this.setlementId = setlementId;
+	public void setSettlementId(int settlementId) {
+		this.settlementId = settlementId;
 	}
 
-	public int getPrroductId() {
-		return prroductId;
+	public int getProductId() {
+		return productId;
 	}
 
-	public void setPrroductId(int prroductId) {
-		this.prroductId = prroductId;
+	public void setProductId(int productId) {
+		this.productId = productId;
 	}
 
 	public int getPlanId() {
