@@ -27,19 +27,11 @@ public class Rental implements java.io.Serializable {
 		this.id = id;
 	}
 
-<<<<<<< Updated upstream
 	public int getSettlementId() {
 		return settlementId;
 	}
 
 	public void setSettlementId(int settlementId) {
-=======
-	public int getsettlementId() {
-		return settlementId;
-	}
-
-	public void setsettlementId(int settlementId) {
->>>>>>> Stashed changes
 		this.settlementId = settlementId;
 	}
 
