@@ -1,9 +1,7 @@
 import java.io.BufferedReader;
-
 import java.util.Scanner;
-
+import dto.Settlement;
 import request_model.RequestModel;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,34 +15,34 @@ import java.util.ArrayList;
 public class Client {
 	private static final String END_MARK = ".";
 	private Boolean             isEnd    = false;
-	
+
 	@SuppressWarnings("unchecked")
 	public static void main(String args[]) {
 		Socket socket = null;
 		BufferedReader bufferdReader, bufferedReaderStdIn;
 		PrintWriter printWriter;
 		String sendString,receiveString;
-		Scanner scanner = new Scanner();
-		
+		Scanner scanner = new Scanner(System.in);
+
 		try {
 			socket 							= new Socket("localhost",9999);
 			bufferdReader 					= new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			printWriter 						= new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
 			bufferedReaderStdIn 				= new BufferedReader(new InputStreamReader(System.in));
 			ObjectInputStream objectInputStream   = new ObjectInputStream(socket.getInputStream());
-			ObjectOutputStream objectOutputStream = new ObjectInputStream(socket.getOutputStream());
-			
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+
 			sendString = "";
-			
+
 			// ID取得
 			System.out.println("IDいれて");
-			String id = scanner.readLine();
+			String id = scanner.nextLine();
 			System.out.println("passwordもいれて");
-			String password = scanner.readLine();
+			String password = scanner.nextLine();
 
 			// authentication instance 作成
-			Authentication authentication = new Authentication(id, password);
-			
+			RequestModel.Authentication authentication = new Authentication(id, password);
+
 			while(!isEnd) {
 				System.out.println(
 					"###################################"
@@ -56,20 +54,20 @@ public class Client {
 				  + "# 4 : 返却"
 				  + "###################################"
 				);
-				
+
 				Integer menu_num = null;
-			
+
 				while (menu_num == null) {
 					try {
-						menu_num = Integer.parseInt(scanner.nextInt());
-					} catch(e) {
+						menu_num = Integer.parseInt(scanner.nextLine());
+					} catch(IOException e) {
 						System.out.println("数値を入力してください");
 					}
 				}
-				
-				RequestModel requestModel = new RequestModel();
+
+				RequestModel requestModel = new RequestModel(id,password);
 				requestModel.authentication = authentication;
-				
+
 				switch(menu_num) {
 					case 1: {
 						requestModel.method = "GET";
@@ -82,27 +80,31 @@ public class Client {
 					case 3: {
 						requestModel.method = "ADD";
 						requestModel.scope  = "settlement";
-						SettlementContent settlementContent;
+						Settlement settlementContent;
 						// 下はダミーです
 						settlementContent.productIds = [1, 2, 3];
 						requestModel.settlementContent = settlementContent;
 					}
+					case 4: {
+						requestModel.method = "DELETE";
+						requestModel.scope = "rental";
+					}
 				}
-	
+
 				objectOutputStream.writeObject(requestModel);
-				
+
 				RequestModel response = (RequestModel) inputStream.readObject();
-				
-				
+
+
 				receiveString = bufferdReader.readLine();
 				System.out.println("Server:" +receiveString);
-				
+
 			}
 			bufferedReaderStdIn.close();
 			bufferdReader.close();
 			printWriter.close();
 			socket.close();
-			
+
 		} catch(IOException | ClassNotFoundException e) {
 			System.out.println("エラーが発生しました");
 			e.printStackTrace();
