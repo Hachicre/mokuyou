@@ -26,7 +26,7 @@ public class RequestModel implements java.io.Serializable {
 	
 }
 
-class Authentication {
+ class Authentication {
 	
 	public String id;
 	public String password;

@@ -1,109 +1,110 @@
 import java.io.BufferedReader;
-import java.util.Scanner;
-import dto.Settlement;
-import request_model.RequestModel;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Scanner;
+
+import request_model.RequestModel;
 
 public class Client {
 	private static final String END_MARK = ".";
-	private Boolean             isEnd    = false;
+	private static Boolean      isEnd     = false;
 
 	@SuppressWarnings("unchecked")
 	public static void main(String args[]) {
 		Socket socket = null;
-		BufferedReader bufferdReader, bufferedReaderStdIn;
-		PrintWriter printWriter;
-		String sendString,receiveString;
+		BufferedReader bufferdReader;
+		ObjectInputStream objectInputStream = null;
+		ObjectOutputStream objectOutputStream = null;
+		String receiveString;
+		String id = "2222";
+		String password = "bigfoot";
 		Scanner scanner = new Scanner(System.in);
+		System.out.print("debug:mainです");
 
 		try {
-			socket 							= new Socket("localhost",9999);
-			bufferdReader 					= new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			printWriter 						= new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
-			bufferedReaderStdIn 				= new BufferedReader(new InputStreamReader(System.in));
-			ObjectInputStream objectInputStream   = new ObjectInputStream(socket.getInputStream());
-			ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-
-			sendString = "";
-
-			// ID取得
-			System.out.println("IDいれて");
-			String id = scanner.nextLine();
-			System.out.println("passwordもいれて");
-			String password = scanner.nextLine();
-
-			// authentication instance 作成
-			RequestModel.Authentication authentication = new Authentication(id, password);
-
+			System.out.println("debug:tryです");
+			socket 					= new Socket("localhost",9999);
+			bufferdReader 			= new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			
+			
+			
 			while(!isEnd) {
-				System.out.println(
-					"###################################"
-				  + "############### MENU ##############"
-				  + "###################################"
-				  + "# 1 : レンタル商品一覧取得"
-				  + "# 2 : 決済一覧取得"
-				  + "# 3 : レンタルするよ(決済)"
-				  + "# 4 : 返却"
-				  + "###################################"
-				);
+				System.out.println("debug:trueです");
+				
+				System.out.println("###################################");
+				System.out.println("############### MENU ##############");
+				System.out.println("###################################");
+				System.out.println("# 1 : レンタル商品一覧取得");
+				System.out.println("# 2 : 決済一覧取得");
+				System.out.println("# 3 : レンタルするよ(決済)");
+				System.out.println("# 4 : 返却");
+				System.out.println("# 0 : 終了");
+				System.out.println("###################################");
+				System.out.print("===>");
 
-				Integer menu_num = null;
-
-				while (menu_num == null) {
-					try {
-						menu_num = Integer.parseInt(scanner.nextLine());
-					} catch(IOException e) {
-						System.out.println("数値を入力してください");
-					}
-				}
+				Integer menu_num = scanner.nextInt();
 
 				RequestModel requestModel = new RequestModel(id,password);
-				requestModel.authentication = authentication;
 
 				switch(menu_num) {
-					case 1: {
+					case 1: 
 						requestModel.method = "GET";
 						requestModel.scope  = "product";
-					}
-					case 2: {
+						break;		
+					case 2: 
 						requestModel.method = "GET";
 						requestModel.scope  = "settlement";
-					}
-					case 3: {
+						break;		
+					case 3: 
 						requestModel.method = "ADD";
 						requestModel.scope  = "settlement";
-						Settlement settlementContent;
-						// 下はダミーです
-						settlementContent.productIds = [1, 2, 3];
-						requestModel.settlementContent = settlementContent;
-					}
-					case 4: {
+						break;	
+					case 4: 
 						requestModel.method = "DELETE";
 						requestModel.scope = "rental";
+						break;
+					case 0:
+						isEnd = true;
+						bufferdReader.close();
+						socket.close();
+						objectOutputStream.flush();
+						objectInputStream.close();
+						objectOutputStream.close();
+						System.exit(0);
+				}
+				objectInputStream   	= new ObjectInputStream(socket.getInputStream());
+				System.out.println("debug:in is accepted");
+				objectOutputStream 		= new ObjectOutputStream(socket.getOutputStream());
+				System.out.println("debug:out is accepted");
+				
+				//そうしん
+				objectOutputStream.writeObject(requestModel);
+				//じゅしん
+				receiveString = bufferdReader.readLine();
+				
+				if(receiveString.equals("product")){
+					ArrayList<dto.Product> resProduct = (ArrayList<dto.Product>) objectInputStream.readObject();
+					for(dto.Product d : resProduct) {
+	    				System.out.println("ISBN :\t" + d.getId());
+	    				System.out.println("BOOKNAME :\t" + d.getName());
+	    				System.out.println("WRITER :\t" + d.getStock());
+	    				System.out.println("PUBLISHER :\t" + d.getPrice());
+					}
+				}else if(receiveString.equals("settlement")) {
+					ArrayList<dto.Settlement> resSettlement = (ArrayList<dto.Settlement>) objectInputStream.readObject();
+					for(dto.Settlement d : resSettlement) {
+	    				System.out.println("ISBN :\t" + d.getId());
+	    				System.out.println("BOOKNAME :\t" + d.getUserId());
+	    				System.out.println("WRITER :\t" + d.getPrice());
+	    				System.out.println("PUBLISHER :\t" + d.getBeReturned());
 					}
 				}
-
-				objectOutputStream.writeObject(requestModel);
-
-				RequestModel response = (RequestModel) inputStream.readObject();
-
-
-				receiveString = bufferdReader.readLine();
-				System.out.println("Server:" +receiveString);
-
+				
 			}
-			bufferedReaderStdIn.close();
-			bufferdReader.close();
-			printWriter.close();
-			socket.close();
 
 		} catch(IOException | ClassNotFoundException e) {
 			System.out.println("エラーが発生しました");
